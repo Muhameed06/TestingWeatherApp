@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_app/features/data/models/weather_model.dart';
 
@@ -20,23 +18,5 @@ class WeatherService {
     } else {
       throw Exception('Failed to load weather data');
     }
-  }
-
-  Future<String> getCurrentCity() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-
-    // ignore: deprecated_member_use
-    Position position = await Geolocator.getCurrentPosition();
-
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-
-    String? city = placemarks[0].locality;
-
-    return city ?? '';
   }
 }
