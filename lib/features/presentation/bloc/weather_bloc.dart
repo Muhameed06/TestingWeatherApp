@@ -31,7 +31,9 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
           final response =
               await _getWeather(GetWeatherParams(cityName: event.cityName));
           response.fold(
-            (failure) => emit(WeatherFailureState(failure.message)),
+            (failure) {
+              emit(WeatherFailureState(failure.message));
+            },
             (weather) => emit(WeatherSuccessState(weather)),
           );
         } on ServerException catch (e) {

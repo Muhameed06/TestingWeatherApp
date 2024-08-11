@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:weather_app/core/helpers/weather_unit_convertions.dart';
 import 'package:weather_app/core/theme/app_pallete.dart';
 import 'package:weather_app/features/data/models/weather_model.dart';
 
 class WeatherDetailsCard extends StatelessWidget {
-  const WeatherDetailsCard({super.key, required this.weather});
+  const WeatherDetailsCard({super.key, required this.weather, required this.isCelsius});
 
   final Weather weather;
+  final bool isCelsius;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,9 @@ class WeatherDetailsCard extends StatelessWidget {
                       child: _buildCard(
                     'Max',
                     HugeIcons.strokeRoundedTemperature,
-                    '${weather.tempMax}°C',
+                    isCelsius
+                        ? '${kelvinToCelsius(weather.temperature.round())}°C'
+                        : '${celciusToKelvin(weather.temperature.round())}°K',
                   )),
                   const SizedBox(width: 8),
                   Expanded(
@@ -63,16 +67,18 @@ class WeatherDetailsCard extends StatelessWidget {
               Row(
                 children: [
                   Expanded(
-                      child: _buildCard('Pressure',
-                          HugeIcons.strokeRoundedDashboardSpeed01, '${weather.pressure} in')),
+                      child: _buildCard(
+                          'Pressure',
+                          HugeIcons.strokeRoundedDashboardSpeed01,
+                          '${weather.pressure} in')),
                   const SizedBox(width: 8),
                   Expanded(
-                      child: _buildCard(
-                          'Sunrise', HugeIcons.strokeRoundedSun01,'${weather.sunrise.hour.toString().padLeft(2, '0')}:${weather.sunrise.minute.toString().padLeft(2, '0')}')),
+                      child: _buildCard('Sunrise', HugeIcons.strokeRoundedSun01,
+                          '${weather.sunrise.hour.toString().padLeft(2, '0')}:${weather.sunrise.minute.toString().padLeft(2, '0')}')),
                   const SizedBox(width: 8),
                   Expanded(
-                      child: _buildCard(
-                          'Sunset', HugeIcons.strokeRoundedMoon, '${weather.sunset.hour.toString().padLeft(2, '0')}:${weather.sunset.minute.toString().padLeft(2, '0')}')),
+                      child: _buildCard('Sunset', HugeIcons.strokeRoundedMoon,
+                          '${weather.sunset.hour.toString().padLeft(2, '0')}:${weather.sunset.minute.toString().padLeft(2, '0')}')),
                 ],
               ),
             ],

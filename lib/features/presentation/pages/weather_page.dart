@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:weather_app/core/helpers/get_current_date.dart';
 import 'package:weather_app/core/helpers/get_current_weather_image.dart';
 import 'package:weather_app/core/helpers/weather_unit_convertions.dart';
+import 'package:weather_app/core/utilities/dialogs/city_not_found_dialog.dart';
 import 'package:weather_app/features/data/models/weather_model.dart';
 import 'package:weather_app/features/presentation/bloc/weather_bloc.dart';
 import 'package:weather_app/features/presentation/widgets/weather_details.dart';
@@ -25,10 +27,17 @@ class WeatherPage extends StatelessWidget {
             children: [
               BlocBuilder<WeatherBloc, WeatherState>(
                 builder: (context, state) {
-                  final Weather? weather = state is WeatherSuccessState
-                      ? state.weather
-                      : null;
+                  final Weather? weather =
+                      state is WeatherSuccessState ? state.weather : null;
                   final bool isCelsius = bloc.currentUnit;
+
+                  if (state is WeatherFailureState) {
+                    
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      showErrorDialog(context, state.message);
+                      
+                    });
+                  }
 
                   return RefreshIndicator(
                     onRefresh: () async {
@@ -49,7 +58,8 @@ class WeatherPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Align(
                                     alignment: Alignment.topLeft,
@@ -68,8 +78,10 @@ class WeatherPage extends StatelessWidget {
                                         color: Colors.grey,
                                       ),
                                       onPressed: () {
-                                        final WeatherState currentState = bloc.state;
-                                        final bool currentUnit = bloc.currentUnit;
+                                        final WeatherState currentState =
+                                            bloc.state;
+                                        final bool currentUnit =
+                                            bloc.currentUnit;
                                         bloc.add(
                                           WeatherSettingsEvent(
                                             currentUnit,
@@ -92,20 +104,25 @@ class WeatherPage extends StatelessWidget {
                               const SizedBox(height: 15),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color.fromARGB(255, 56, 56, 61),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 56, 56, 61),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
-                                  fixedSize: Size(MediaQuery.of(context).size.width * 0.9, 50),
+                                  fixedSize: Size(
+                                      MediaQuery.of(context).size.width * 0.9,
+                                      50),
                                 ),
                                 onPressed: () {
                                   if (cityController.text.isNotEmpty) {
-                                    bloc.add(WeatherFetchEvent(cityController.text));
+                                    bloc.add(
+                                        WeatherFetchEvent(cityController.text));
                                   }
                                 },
                                 child: const Text(
                                   'Get Weather',
-                                  style: TextStyle(color: Colors.white, fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
                                 ),
                               ),
                               const SizedBox(height: 15),
@@ -137,7 +154,10 @@ class WeatherPage extends StatelessWidget {
                                 ),
                                 Text(getFormattedDateTime()),
                                 const SizedBox(height: 10),
-                                WeatherDetailsCard(weather: weather),
+                                WeatherDetailsCard(
+                                  weather: weather,
+                                  isCelsius: isCelsius,
+                                ),
                               ],
                             ],
                           ),

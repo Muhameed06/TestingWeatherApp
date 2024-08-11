@@ -37,17 +37,13 @@ class MyApp extends StatelessWidget {
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
         if (state is WeatherInitialState) {
-          return WeatherPage();
+          return const WeatherPage();
         } else if (state is WeatherSuccessState) {
-          return WeatherPage();
+          return const WeatherPage();
         } else if (state is WeatherSettingsState) {
           return const SettingsPage();
         } else {
-          return const MaterialApp(
-            home: Scaffold(
-              body: CircularProgressIndicator(),
-            ),
-          );
+          return const WeatherPage();
         }
       },
     );
