@@ -3,7 +3,7 @@ String getFormattedDateTime() {
   final isDaytime = now.hour >= 6 && now.hour < 18;
   
   final daysOfWeek = [
-    'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
   ];
   
   final dayOfWeek = daysOfWeek[now.weekday - 1];
