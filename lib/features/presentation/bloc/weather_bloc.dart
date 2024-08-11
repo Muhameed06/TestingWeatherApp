@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/core/error/exceptions.dart';
 import 'package:weather_app/features/data/models/weather_model.dart';
 import 'package:weather_app/features/domain/usecases/get_weather.dart';
 
@@ -8,7 +9,7 @@ part 'weather_state.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   final WeatherUsecase _getWeather;
-  bool _isCelcius = true; // Default value
+  bool _isCelcius = true;
 
   WeatherBloc({required WeatherUsecase getWeather})
       : _getWeather = getWeather,
@@ -26,12 +27,16 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
     on<WeatherFetchEvent>(
       (event, emit) async {
-        final response =
-            await _getWeather(GetWeatherParams(cityName: event.cityName));
-        response.fold(
-          (failure) => emit(WeatherFailureState(failure.message)),
-          (weather) => emit(WeatherSuccessState(weather)),
-        );
+        try {
+          final response =
+              await _getWeather(GetWeatherParams(cityName: event.cityName));
+          response.fold(
+            (failure) => emit(WeatherFailureState(failure.message)),
+            (weather) => emit(WeatherSuccessState(weather)),
+          );
+        } on ServerException catch (e) {
+          emit(WeatherFailureState(e.message));
+        }
       },
     );
 
@@ -48,23 +53,19 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     );
 
     on<WeatherUnitToCelciusEvent>(
-      (event, emit) async {
+      (event, emit) {
         _isCelcius = true;
-        final currentState = state;
-        print("State kur e qesum celcius ${currentState}");
         emit(WeatherSettingsState(true, event.weather));
       },
     );
 
     on<WeatherUnitToFarenheitEvent>(
-      (event, emit) async {
+      (event, emit) {
         _isCelcius = false;
-        final currentState = state;
-        print("State kur e qesum kalvin ${currentState}");
         emit(WeatherSettingsState(false, event.weather));
       },
     );
   }
 
-  bool get currentUnit => _isCelcius; // Getter to access the current unit
+  bool get currentUnit => _isCelcius;
 }

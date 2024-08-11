@@ -9,6 +9,7 @@ class WeatherService {
 
   WeatherService(this.apiKey);
 
+  //MARK: - Fetches the weather for given city
   Future<Weather> getWeather(String cityName) async {
     final response = await http
         .get(Uri.parse('$BASE_URL?q=$cityName&appid=$apiKey&units=metrics'));
@@ -16,7 +17,24 @@ class WeatherService {
     if (response.statusCode == 200) {
       return Weather.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to load weather data');
+      final errorMessage = _getErrorMessage(response.statusCode);
+      throw Exception(errorMessage);
+    }
+  }
+
+  //MARK: - Checks the other status codes and gives back the message error
+  String _getErrorMessage(int statusCode) {
+    switch (statusCode) {
+      case 400:
+        return 'Bad request. Please check your input.';
+      case 401:
+        return 'Unauthorized. Please check your API key.';
+      case 404:
+        return 'City not found. Please check the city name.';
+      case 500:
+        return 'Server error. Please try again later.';
+      default:
+        return 'Unexpected error occurred. Status code: $statusCode';
     }
   }
 }

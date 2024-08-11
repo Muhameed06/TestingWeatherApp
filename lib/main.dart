@@ -37,9 +37,9 @@ class MyApp extends StatelessWidget {
     return BlocBuilder<WeatherBloc, WeatherState>(
       builder: (context, state) {
         if (state is WeatherInitialState) {
-          return const WeatherPage();
+          return WeatherPage();
         } else if (state is WeatherSuccessState) {
-          return const WeatherPage();
+          return WeatherPage();
         } else if (state is WeatherSettingsState) {
           return const SettingsPage();
         } else {

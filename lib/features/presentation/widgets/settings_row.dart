@@ -40,7 +40,7 @@ class _SettingsRowState extends State<SettingsRow> {
               ),
               const SizedBox(width: 12),
               Text(
-                '${context.read<WeatherBloc>().currentUnit}',
+                context.read<WeatherBloc>().currentUnit ? 'Celsius' : 'Kelvin',
               ),
             ],
           ),
@@ -50,25 +50,15 @@ class _SettingsRowState extends State<SettingsRow> {
           value: context.read<WeatherBloc>().currentUnit,
           onChanged: (value) {
             final currentState = context.read<WeatherBloc>().state;
-            print("State n toggle ${currentState}");
             setState(() {
               isSwitched = value;
             });
 
             if (currentState is WeatherSettingsState) {
-              print(
-                  "Temperatura n toggle ${currentState.weather?.temperature}");
               context.read<WeatherBloc>().add(value
                   ? WeatherUnitToCelciusEvent(currentState.weather)
                   : WeatherUnitToFarenheitEvent(currentState.weather));
             }
-            // context.read<WeatherBloc>().add(value
-            //     ? const WeatherUnitToCelciusEvent(null)
-            //     : const WeatherUnitToFarenheitEvent(null));
-
-            // context.read<WeatherBloc>().add(value
-            //     ? const WeatherInitializeEvent(null, true)
-            //     : const WeatherInitializeEvent(null, false));
           },
         ),
       ],

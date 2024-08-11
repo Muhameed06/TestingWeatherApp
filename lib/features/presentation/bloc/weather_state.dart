@@ -24,8 +24,3 @@ final class WeatherSettingsState extends WeatherState {
   final Weather? weather;
   const WeatherSettingsState(this.isCelcius, this.weather);
 }
-
-final class WeatherUnitChangedState extends WeatherState {
-  final bool isCelcius;
-  const WeatherUnitChangedState(this.isCelcius);
-}

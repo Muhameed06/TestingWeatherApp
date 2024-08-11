@@ -60,7 +60,6 @@ class WeatherDetailsCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              // Second Row of Cards
               Row(
                 children: [
                   Expanded(

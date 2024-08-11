@@ -14,45 +14,33 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    return BlocListener<WeatherBloc, WeatherState>(
-      listener: (context, state) {
-        if (state is WeatherSettingsState) {
-          print("muhamed ${state}");
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () async {
-              final currentState = context.read<WeatherBloc>().state;
-              final isCelcius = context.read<WeatherBloc>().currentUnit;
+    return Scaffold(
+      appBar: AppBar(
+        leading: BlocBuilder<WeatherBloc, WeatherState>(
+          builder: (context, state) {
+            return IconButton(
+              onPressed: () async {
+                final isCelcius = context.read<WeatherBloc>().currentUnit;
 
-              if (currentState is WeatherSettingsState) {
-                print("Mir o ");
-                print("Temperature ${currentState.weather?.temperature}");
-                context.read<WeatherBloc>().add(
-                    WeatherInitializeEvent(currentState.weather, isCelcius));
-              } else {
-                print("Keq o ");
-                context
-                    .read<WeatherBloc>()
-                    .add(WeatherInitializeEvent(null, isCelcius));
-              }
-            },
-            icon: const Icon(Icons.arrow_back),
-          ),
-          title: BlocBuilder<WeatherBloc, WeatherState>(
-            builder: (context, state) {
-              final isCelcius = context.read<WeatherBloc>().currentUnit;
-              return Text('Settings ${isCelcius ? "°C" : "°F"}');
-            },
-          ),
+                if (state is WeatherSettingsState) {
+                  context.read<WeatherBloc>().add(
+                      WeatherInitializeEvent(state.weather, isCelcius));
+                } else {
+                  context
+                      .read<WeatherBloc>()
+                      .add(WeatherInitializeEvent(null, isCelcius));
+                }
+              },
+              icon: const Icon(Icons.arrow_back),
+            );
+          },
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [SettingsRow(item: settingsItem[0])],
-          ),
+        title: const Text('Settings'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [SettingsRow(item: settingsItem[0])],
         ),
       ),
     );

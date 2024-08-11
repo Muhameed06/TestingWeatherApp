@@ -8,25 +8,13 @@ import 'package:weather_app/features/data/models/weather_model.dart';
 import 'package:weather_app/features/presentation/bloc/weather_bloc.dart';
 import 'package:weather_app/features/presentation/widgets/weather_details.dart';
 
-class WeatherPage extends StatefulWidget {
+class WeatherPage extends StatelessWidget {
   const WeatherPage({super.key});
 
   @override
-  State<WeatherPage> createState() => _WeatherPageState();
-}
-
-class _WeatherPageState extends State<WeatherPage> {
-  final _cityController = TextEditingController();
-
-  @override
-  void dispose() {
-    _cityController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final buttonWidth = MediaQuery.of(context).size.width * 0.9;
+    final WeatherBloc bloc = context.read<WeatherBloc>();
+    final TextEditingController cityController = TextEditingController();
 
     return Scaffold(
       body: Padding(
@@ -37,22 +25,15 @@ class _WeatherPageState extends State<WeatherPage> {
             children: [
               BlocBuilder<WeatherBloc, WeatherState>(
                 builder: (context, state) {
-                  Weather? weather;
-
-                  if (state is WeatherSuccessState) {
-                    if (state.weather != null) {
-                      weather = state.weather!;
-                    }
-                  }
-
-                  final isCelcius = context.read<WeatherBloc>().currentUnit;
+                  final Weather? weather = state is WeatherSuccessState
+                      ? state.weather
+                      : null;
+                  final bool isCelsius = bloc.currentUnit;
 
                   return RefreshIndicator(
                     onRefresh: () async {
-                      if (_cityController.text.isNotEmpty) {
-                        context
-                            .read<WeatherBloc>()
-                            .add(WeatherFetchEvent(_cityController.text));
+                      if (cityController.text.isNotEmpty) {
+                        bloc.add(WeatherFetchEvent(cityController.text));
                         getFormattedDateTime();
                       }
                     },
@@ -68,17 +49,17 @@ class _WeatherPageState extends State<WeatherPage> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        "Good Morning",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
-                                      )),
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "Good Morning",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                   Align(
                                     alignment: Alignment.topRight,
                                     child: IconButton(
@@ -87,61 +68,47 @@ class _WeatherPageState extends State<WeatherPage> {
                                         color: Colors.grey,
                                       ),
                                       onPressed: () {
-                                        final currentState =
-                                            context.read<WeatherBloc>().state;
-                                        final currentUnit = context
-                                            .read<WeatherBloc>()
-                                            .currentUnit;
-                                        print(
-                                            "Muhamed current unit in main page ${currentUnit}");
-                                        if (currentState
-                                            is WeatherSuccessState) {
-                                          context.read<WeatherBloc>().add(
-                                              WeatherSettingsEvent(currentUnit,
-                                                  currentState.weather));
-                                        } else {
-                                          context.read<WeatherBloc>().add(
-                                              WeatherSettingsEvent(
-                                                  currentUnit, null));
-                                        }
+                                        final WeatherState currentState = bloc.state;
+                                        final bool currentUnit = bloc.currentUnit;
+                                        bloc.add(
+                                          WeatherSettingsEvent(
+                                            currentUnit,
+                                            currentState is WeatherSuccessState
+                                                ? currentState.weather
+                                                : null,
+                                          ),
+                                        );
                                       },
                                     ),
                                   ),
                                 ],
                               ),
                               TextFormField(
-                                controller: _cityController,
+                                controller: cityController,
                                 decoration: const InputDecoration(
                                   hintText: 'Search city...',
                                 ),
                               ),
-                              const SizedBox(
-                                height: 15,
-                              ),
+                              const SizedBox(height: 15),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 56, 56, 61),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    fixedSize: Size(buttonWidth, 50)),
-                                onPressed: () async {
-                                  if (_cityController.text != '') {
-                                    context.read<WeatherBloc>().add(
-                                        WeatherFetchEvent(
-                                            _cityController.text));
+                                  backgroundColor: const Color.fromARGB(255, 56, 56, 61),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  fixedSize: Size(MediaQuery.of(context).size.width * 0.9, 50),
+                                ),
+                                onPressed: () {
+                                  if (cityController.text.isNotEmpty) {
+                                    bloc.add(WeatherFetchEvent(cityController.text));
                                   }
                                 },
                                 child: const Text(
                                   'Get Weather',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                                  style: TextStyle(color: Colors.white, fontSize: 16),
                                 ),
                               ),
-                              const SizedBox(
-                                height: 15,
-                              ),
+                              const SizedBox(height: 15),
                               if (weather != null) ...[
                                 Text(
                                   weather.cityName,
@@ -150,11 +117,12 @@ class _WeatherPageState extends State<WeatherPage> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Image.asset(
-                                    getWeatherImage(weather.mainCondition),
-                                    width: 300,
-                                    height: 300),
+                                  getWeatherImage(weather.mainCondition),
+                                  width: 300,
+                                  height: 300,
+                                ),
                                 Text(
-                                  isCelcius
+                                  isCelsius
                                       ? '${kelvinToCelsius(weather.temperature.round())}°C'
                                       : '${celciusToKelvin(weather.temperature.round())}°K',
                                   style: const TextStyle(
@@ -168,9 +136,7 @@ class _WeatherPageState extends State<WeatherPage> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(getFormattedDateTime()),
-                                const SizedBox(
-                                  height: 10,
-                                ),
+                                const SizedBox(height: 10),
                                 WeatherDetailsCard(weather: weather),
                               ],
                             ],

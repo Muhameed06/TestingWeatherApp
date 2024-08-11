@@ -17,6 +17,8 @@ class WeatherRepositoryImplementation implements WeatherRepository {
       return right(weather);
     } on ServerException catch (e) {
       return left(Failure(e.message));
+    } catch (e) {
+      return left(Failure('An unexpected error occurred'));
     }
   }
 }
