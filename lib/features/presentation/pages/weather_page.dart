@@ -10,8 +10,15 @@ import 'package:weather_app/features/data/models/weather_model.dart';
 import 'package:weather_app/features/presentation/bloc/weather_bloc.dart';
 import 'package:weather_app/features/presentation/widgets/weather_details.dart';
 
-class WeatherPage extends StatelessWidget {
+class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
+
+  @override
+  State<WeatherPage> createState() => _WeatherPageState();
+}
+
+class _WeatherPageState extends State<WeatherPage> {
+  String? cityName = '';
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +39,27 @@ class WeatherPage extends StatelessWidget {
                   final bool isCelsius = bloc.currentUnit;
 
                   if (state is WeatherFailureState) {
-                    
                     SchedulerBinding.instance.addPostFrameCallback((_) {
                       showErrorDialog(context, state.message);
-                      
                     });
                   }
 
                   return RefreshIndicator(
                     onRefresh: () async {
-                      if (cityController.text.isNotEmpty) {
-                        bloc.add(WeatherFetchEvent(cityController.text));
+                      await Future.delayed(const Duration(seconds: 1));
+                      // if (cityController.text.isNotEmpty) {
+                      //   if (state is WeatherSuccessState) {
+                      //     bloc.add(WeatherFetchEvent(cityController.text));
+                      //     getFormattedDateTime();
+                      //   }
+                      // } else {
+                      //   bloc.add((WeatherRefreshEvent(weather)));
+                      //   getFormattedDateTime();
+                      // }
+
+                      if (state is WeatherSuccessState) {
+                        bloc.add(
+                            WeatherFetchEvent(cityName ?? cityController.text));
                         getFormattedDateTime();
                       }
                     },
@@ -114,9 +131,13 @@ class WeatherPage extends StatelessWidget {
                                       50),
                                 ),
                                 onPressed: () {
+                                  cityName = cityController.text;
                                   if (cityController.text.isNotEmpty) {
                                     bloc.add(
                                         WeatherFetchEvent(cityController.text));
+                                  } else {
+                                    showErrorDialog(context,
+                                        'Please type the name of the city');
                                   }
                                 },
                                 child: const Text(
@@ -142,7 +163,6 @@ class WeatherPage extends StatelessWidget {
                                   isCelsius
                                       ? '${kelvinToCelsius(weather.temperature).round()}°C'
                                       : '${kelvinToFahrenheit(weather.temperature).round()}°F',
-                                      
                                   style: const TextStyle(
                                       fontSize: 50,
                                       fontWeight: FontWeight.bold),

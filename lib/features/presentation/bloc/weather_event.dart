@@ -31,3 +31,8 @@ final class WeatherUnitToFarenheitEvent extends WeatherEvent {
   final Weather? weather;
   const WeatherUnitToFarenheitEvent(this.weather);
 }
+
+final class WeatherRefreshEvent extends WeatherEvent {
+  final Weather? weather;
+  const WeatherRefreshEvent(this.weather);
+}

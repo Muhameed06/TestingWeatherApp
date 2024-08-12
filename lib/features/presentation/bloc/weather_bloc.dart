@@ -67,6 +67,12 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         emit(WeatherSettingsState(false, event.weather));
       },
     );
+
+    on<WeatherRefreshEvent>(
+      (event, emit) {
+        emit(WeatherSuccessState(event.weather));
+      },
+    );
   }
 
   bool get currentUnit => _isCelcius;
