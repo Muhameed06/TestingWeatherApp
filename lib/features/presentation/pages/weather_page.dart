@@ -47,16 +47,6 @@ class _WeatherPageState extends State<WeatherPage> {
                   return RefreshIndicator(
                     onRefresh: () async {
                       await Future.delayed(const Duration(seconds: 1));
-                      // if (cityController.text.isNotEmpty) {
-                      //   if (state is WeatherSuccessState) {
-                      //     bloc.add(WeatherFetchEvent(cityController.text));
-                      //     getFormattedDateTime();
-                      //   }
-                      // } else {
-                      //   bloc.add((WeatherRefreshEvent(weather)));
-                      //   getFormattedDateTime();
-                      // }
-
                       if (state is WeatherSuccessState && cityName != null) {
                         bloc.add(WeatherFetchEvent(cityName!));
                         getFormattedDateTime();
