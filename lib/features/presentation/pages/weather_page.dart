@@ -47,8 +47,8 @@ class _WeatherPageState extends State<WeatherPage> {
                   return RefreshIndicator(
                     onRefresh: () async {
                       await Future.delayed(const Duration(seconds: 1));
-                      if (state is WeatherSuccessState && cityName != null) {
-                        bloc.add(WeatherFetchEvent(cityName!));
+                      if (state is WeatherSuccessState && weather != null) {
+                        bloc.add(WeatherFetchEvent(weather.cityName));
                         getFormattedDateTime();
                       }
                     },
