@@ -57,9 +57,8 @@ class _WeatherPageState extends State<WeatherPage> {
                       //   getFormattedDateTime();
                       // }
 
-                      if (state is WeatherSuccessState) {
-                        bloc.add(
-                            WeatherFetchEvent(cityName ?? cityController.text));
+                      if (state is WeatherSuccessState && cityName != null) {
+                        bloc.add(WeatherFetchEvent(cityName!));
                         getFormattedDateTime();
                       }
                     },
@@ -131,8 +130,8 @@ class _WeatherPageState extends State<WeatherPage> {
                                       50),
                                 ),
                                 onPressed: () {
-                                  cityName = cityController.text;
                                   if (cityController.text.isNotEmpty) {
+                                    cityName = cityController.text;
                                     bloc.add(
                                         WeatherFetchEvent(cityController.text));
                                   } else {
