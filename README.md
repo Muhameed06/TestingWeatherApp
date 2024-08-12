@@ -1,11 +1,48 @@
-# weather_app
+### Weather App
+This is a weather app built with Dart and Flutter. It allows users to check the weather and forecast for any city and provides a settings option to toggle between temperature units.
+It was built using Clean Architecture and BLoC for State Management
 
-A new Flutter project.
+### Features
 
-## Getting Started
+WeatherPage:
 
-This project is a starting point for a Flutter application.
+* Contains a text field where users can type the name of a city.
+* Includes a button to fetch and display the current weather and forecast for the specified city.
+* Displays the weather information including temperature and forecast.
+* Provides access to the Settings screen through an icon above the text field.
+  
+Settings Screen:
 
+* Features a toggle button to switch between Kelvin and Celsius units for temperature.
+* The selected temperature unit is applied immediately upon toggling and is reflected on the WeatherPage.
+
+### Instructions
+
+| Command | Description |
+| --- | --- |
+| `git clone <repository-url>` | Cloning the Repository |
+| `cd <project-directory>` | Navigating to the Project Directory |
+| `flutter pub get` | Installing Dependencies |
+
+### WeatherPage:
+
+* Enter a city name in the text field and click the button to get the weather information.
+* The weather details and forecast for the city will be displayed.
+* Swipe up to refresh the data. Considering that weather doesn't change very often you can test refreshing with the current time text.
+* If a wrong city name is typed an alert will show.
+* To access the settings, tap the settings icon located above the text field.
+  
+Settings Screen:
+
+* Use the toggle button to switch between Kelvin and Celsius units.
+* Changes to the temperature unit will be applied immediately and reflected when you return to the WeatherPage.
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+Feel free to adjust any details as needed!
+
+### Resources
 A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
@@ -14,3 +51,4 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+

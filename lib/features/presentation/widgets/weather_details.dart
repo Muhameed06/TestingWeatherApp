@@ -44,8 +44,8 @@ class WeatherDetailsCard extends StatelessWidget {
                     'Max',
                     HugeIcons.strokeRoundedTemperature,
                     isCelsius
-                        ? '${kelvinToCelsius(weather.temperature.round())}°C'
-                        : '${celciusToKelvin(weather.temperature.round())}°K',
+                          ? '${kelvinToCelsius(weather.temperature).round()}°C'
+                          : '${kelvinToFahrenheit(weather.temperature).round()}°F',
                   )),
                   const SizedBox(width: 8),
                   Expanded(

@@ -40,7 +40,7 @@ class _SettingsRowState extends State<SettingsRow> {
               ),
               const SizedBox(width: 12),
               Text(
-                context.read<WeatherBloc>().currentUnit ? 'Celsius' : 'Kelvin',
+                context.read<WeatherBloc>().currentUnit ? 'Celsius' : 'Fahrenheit',
               ),
             ],
           ),

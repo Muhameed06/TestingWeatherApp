@@ -140,8 +140,9 @@ class WeatherPage extends StatelessWidget {
                                 ),
                                 Text(
                                   isCelsius
-                                      ? '${kelvinToCelsius(weather.temperature.round())}°C'
-                                      : '${celciusToKelvin(weather.temperature.round())}°K',
+                                      ? '${kelvinToCelsius(weather.temperature).round()}°C'
+                                      : '${kelvinToFahrenheit(weather.temperature).round()}°F',
+                                      
                                   style: const TextStyle(
                                       fontSize: 50,
                                       fontWeight: FontWeight.bold),
