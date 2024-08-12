@@ -1,6 +1,6 @@
 ### Weather App
 This is a weather app built with Dart and Flutter. It allows users to check the weather and forecast for any city and provides a settings option to toggle between temperature units.
-It was built using Clean Architecture and BLoC for State Management
+It was built using Clean Architecture and BLoC for State Management.
 
 ### Features
 
@@ -13,7 +13,7 @@ WeatherPage:
   
 Settings Screen:
 
-* Features a toggle button to switch between Kelvin and Celsius units for temperature.
+* Features a toggle button to switch between Fahrenheit and Celsius units for temperature.
 * The selected temperature unit is applied immediately upon toggling and is reflected on the WeatherPage.
 
 ### Instructions
@@ -28,14 +28,23 @@ Settings Screen:
 
 * Enter a city name in the text field and click the button to get the weather information.
 * The weather details and forecast for the city will be displayed.
-* Swipe up to refresh the data. Considering that weather doesn't change very often you can test refreshing with the current time text.
+* Swipe up to refresh the data. Considering that weather doesn't change very often you can test refreshing with the current time above the temperature.
 * If a wrong city name is typed an alert will show.
+* If no city is entered at all, an alert will show.
 * To access the settings, tap the settings icon located above the text field.
   
 Settings Screen:
 
-* Use the toggle button to switch between Kelvin and Celsius units.
+* Use the toggle button to switch between Fahrenheit and Celsius units.
 * Changes to the temperature unit will be applied immediately and reflected when you return to the WeatherPage.
+
+###Third party libraries
+
+* http - For making network requests
+* BLoC - For State Management
+* fpdart - For Functional Dart Programming
+* hugeicons - For icons
+
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
