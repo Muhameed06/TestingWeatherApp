@@ -38,7 +38,7 @@ Settings Screen:
 * Use the toggle button to switch between Fahrenheit and Celsius units.
 * Changes to the temperature unit will be applied immediately and reflected when you return to the WeatherPage.
 
-###Third party libraries
+### Third party libraries
 
 * http - For making network requests
 * BLoC - For State Management
